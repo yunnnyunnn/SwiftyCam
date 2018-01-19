@@ -421,9 +421,6 @@ open class SwiftyCamViewController: UIViewController {
 			return
 		}
 
-        DispatchQueue.main.async {
-            self.cameraDelegate?.swiftyCamWillTakePhoto(self)
-        }
 		if device.hasFlash == true && flashEnabled == true /* TODO: Add Support for Retina Flash and add front flash */ {
 			changeFlashSettings(device: device, mode: .on)
 			capturePhotoAsyncronously(completionHandler: { (_) in })
@@ -786,6 +783,10 @@ open class SwiftyCamViewController: UIViewController {
 
 		if let videoConnection = photoFileOutput?.connection(with: AVMediaType.video) {
 
+            DispatchQueue.main.async {
+                self.cameraDelegate?.swiftyCamWillTakePhoto(self)
+            }
+            
 			photoFileOutput?.captureStillImageAsynchronously(from: videoConnection, completionHandler: {(sampleBuffer, error) in
 				if (sampleBuffer != nil) {
 					let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer!)
